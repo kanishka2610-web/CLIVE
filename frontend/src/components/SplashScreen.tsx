@@ -38,7 +38,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             transition={{ delay: 0.2 }}
             className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono tracking-widest text-gray-400 uppercase"
           >
-            <span>Founder Labs</span>
+            <span className="text-white font-bold">CLIVE</span>
             <span className="text-electric">•</span>
             <span>AI Radar</span>
           </motion.div>

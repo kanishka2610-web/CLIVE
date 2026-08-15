@@ -5,8 +5,8 @@
   "description": "CLIVE — High-Signal AI Intelligence Platform with Swipe Gestures and Multi-Factor Ranking",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "dev": "npm run dev --prefix frontend",
-    "preview": "npm run preview --prefix frontend"
+    "dev": "npm run dev --prefix frontend -- --host",
+    "preview": "npm run preview --prefix frontend -- --host"
   },
   "keywords": [
     "ai",

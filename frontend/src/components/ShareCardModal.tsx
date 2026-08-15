@@ -22,7 +22,7 @@ export const ShareCardModal: React.FC<ShareCardModalProps> = ({
     ? story.why_it_matters[0]
     : story.summary || '';
 
-  const shareText = `📡 FOUNDER LABS • AI RADAR / CLIVE\n\n⚡ ${story.headline || story.title}\n\n🎯 Why It Matters:\n${whyItMattersText}\n\n📊 Signal Metrics: Importance ${story.importance_score.toFixed(1)}/100 | Novelty ${story.novelty_score.toFixed(1)}/100\n🔗 Read First-Party: ${story.canonical_url}\n\n#AI #Intelligence #FounderLabs`;
+  const shareText = `📡 CLIVE • AI RADAR\n\n⚡ ${story.headline || story.title}\n\n🎯 Why It Matters:\n${whyItMattersText}\n\n📊 Signal Metrics: Importance ${story.importance_score.toFixed(1)}/100 | Novelty ${story.novelty_score.toFixed(1)}/100\n🔗 Read First-Party: ${story.canonical_url}\n\n#AI #Intelligence #CLIVERadar`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText);
@@ -64,12 +64,12 @@ export const ShareCardModal: React.FC<ShareCardModalProps> = ({
 
             {/* The Visual Share Card Preview */}
             <div className="p-5">
-              <div className="p-5 rounded-2xl bg-gradient-to-b from-[#141E28] to-[#0B1015] border border-electric/40 shadow-[0_0_30px_rgba(16,231,96,0.15)] space-y-4">
+              <div className="p-5 rounded-2xl bg-gradient-to-b from-[#141E28] to-[#0B1015] border border-electric/40 shadow-[0_0_30px_rgba(0,240,255,0.15)] space-y-4">
                 {/* Brand Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <div className="flex items-center space-x-1.5 text-[10px] font-mono tracking-widest text-electric uppercase">
                     <Radio className="w-3 h-3 animate-pulse" />
-                    <span>Founder Labs • AI Radar</span>
+                    <span>CLIVE • AI Radar</span>
                   </div>
                   <span className="px-2 py-0.5 rounded bg-electric/15 text-electric text-[10px] font-mono font-bold">
                     SCORE {story.rank_score?.toFixed(1) || story.importance_score.toFixed(1)}

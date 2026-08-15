@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     SCAN_INTERVAL_MINUTES: int = 10
     HTTP_TIMEOUT_SECONDS: float = 12.0
     MAX_ITEMS_PER_FEED: int = 25
-    USER_AGENT: str = "CLIVE-AI-Intelligence/1.0 (+https://github.com/founderlabs/clive)"
+    USER_AGENT: str = "CLIVE-AI-Intelligence/1.0 (+https://github.com/kanishka2610-web/CLIVE)"
     
     # CORS
     CORS_ORIGINS: Union[str, List[str]] = [
