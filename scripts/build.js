@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('⚡ [CLIVE BUILD] Starting Netlify / Production Multi-Target Build...');
+console.log('⚡ [CLIVE BUILD] Starting Multi-Target Production Build...');
 
 const rootDir = path.resolve(__dirname, '..');
 const frontendDir = path.join(rootDir, 'frontend');
@@ -20,7 +20,7 @@ try {
 }
 
 // 2. Ensure root dist exists and copy all files
-console.log('📂 [2/3] Mirroring dist to root ./dist for universal Netlify publish paths...');
+console.log('📂 [2/3] Mirroring dist to root ./dist for universal deployment targets...');
 if (fs.existsSync(rootDist)) {
   fs.rmSync(rootDist, { recursive: true, force: true });
 }
@@ -41,7 +41,7 @@ function copyDir(src, dest) {
 
 copyDir(frontendDist, rootDist);
 
-// 3. Ensure _redirects is present in both rootDist and frontendDist
+// 3. Ensure _redirects and 404.html are present for Netlify & GitHub Pages SPA routing
 const redirectsSrc = path.join(frontendDir, 'public', '_redirects');
 if (fs.existsSync(redirectsSrc)) {
   fs.copyFileSync(redirectsSrc, path.join(rootDist, '_redirects'));
@@ -51,4 +51,11 @@ if (fs.existsSync(redirectsSrc)) {
   fs.writeFileSync(path.join(frontendDist, '_redirects'), '/*    /index.html   200\n');
 }
 
-console.log('✅ [3/3] Build complete! Published at ./dist and ./frontend/dist successfully.');
+// Create 404.html mirror of index.html for static SPA routing fallbacks
+const indexHtmlPath = path.join(rootDist, 'index.html');
+if (fs.existsSync(indexHtmlPath)) {
+  fs.copyFileSync(indexHtmlPath, path.join(rootDist, '404.html'));
+  fs.copyFileSync(indexHtmlPath, path.join(frontendDist, '404.html'));
+}
+
+console.log('✅ [3/3] Build complete! Published at ./dist and ./frontend/dist with SPA redirects.');
