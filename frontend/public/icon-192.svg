@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="192" height="192">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#14221A"/>
+      <stop offset="100%" stop-color="#070A0D"/>
+    </radialGradient>
+    <linearGradient id="limeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10E760"/>
+      <stop offset="100%" stop-color="#C8F845"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Outer Chassis -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" stroke="#10E760" stroke-width="8" stroke-opacity="0.3"/>
+  
+  <!-- Concentric Rings -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#10E760" stroke-width="4" stroke-opacity="0.15"/>
+  <circle cx="256" cy="256" r="130" fill="none" stroke="#10E760" stroke-width="4" stroke-opacity="0.25"/>
+  <circle cx="256" cy="256" r="70" fill="none" stroke="#10E760" stroke-width="4" stroke-opacity="0.4"/>
+  
+  <!-- Central Hub -->
+  <circle cx="256" cy="256" r="32" fill="url(#limeGrad)" filter="url(#glow)"/>
+  <circle cx="256" cy="256" r="14" fill="#070A0D"/>
+  <circle cx="256" cy="256" r="7" fill="#10E760"/>
+  
+  <!-- Target Blip -->
+  <circle cx="340" cy="180" r="14" fill="#0DF0A0" filter="url(#glow)"/>
+</svg>

@@ -1,0 +1,32 @@
+{
+  "name": "CLIVE — AI Intelligence Radar",
+  "short_name": "CLIVE",
+  "description": "Personal AI intelligence engine collecting, classifying and ranking signals from reputable first-party labs.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#070A0D",
+  "theme_color": "#070A0D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["news", "productivity", "utilities"]
+}
