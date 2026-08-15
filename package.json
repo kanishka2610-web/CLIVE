@@ -1,0 +1,21 @@
+{
+  "name": "clive-ai-radar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CLIVE — High-Signal AI Intelligence Platform with Swipe Gestures and Multi-Factor Ranking",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "dev": "npm run dev --prefix frontend",
+    "preview": "npm run preview --prefix frontend"
+  },
+  "keywords": [
+    "ai",
+    "radar",
+    "fastapi",
+    "react",
+    "gemini",
+    "swipe-gestures"
+  ],
+  "author": "CLIVE Team",
+  "license": "MIT"
+}
