@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Header } from './components/Header';
@@ -25,15 +25,23 @@ const queryClient = new QueryClient({
 
 const AppContent: React.FC = () => {
   const [showSplash, setShowSplash] = useState(() => {
-    const hasSeen = sessionStorage.getItem('clive_splash_seen');
-    return !hasSeen;
+    try {
+      const hasSeen = sessionStorage.getItem('clive_splash_seen');
+      return !hasSeen;
+    } catch {
+      return false;
+    }
   });
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
 
-  const handleSplashComplete = () => {
-    sessionStorage.setItem('clive_splash_seen', 'true');
+  const handleSplashComplete = useCallback(() => {
+    try {
+      sessionStorage.setItem('clive_splash_seen', 'true');
+    } catch {
+      // Ignore if cookies/storage blocked
+    }
     setShowSplash(false);
-  };
+  }, []);
 
   const { data: stats } = useQuery({
     queryKey: ['radarStats'],
