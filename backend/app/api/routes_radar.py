@@ -1,6 +1,7 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone, timedelta
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException, BackgroundTasks
+
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, or_
@@ -36,17 +37,26 @@ class OvernightDispatchResponse(BaseModel):
     key_developments: List[Dict[str, Any]]
     stories: List[StoryOut]
 
+from fastapi import APIRouter, Depends, Query, HTTPException, BackgroundTasks
+from backend.app.services.scheduler import is_scan_running, run_scheduled_intelligence_scan
+
 @router.get("/deck", response_model=List[StoryOut])
 def get_radar_deck(
+    background_tasks: BackgroundTasks,
     limit: int = Query(25, ge=5, le=100),
     user_id: str = Query("default_user"),
     db: Session = Depends(get_db)
 ):
     """
     Returns prioritized cards for the interactive swipe deck.
+    Automatically triggers minute-to-minute live background scanning on reload.
     """
+    if not is_scan_running():
+        background_tasks.add_task(run_scheduled_intelligence_scan)
+
     personalization = PersonalizationService(db)
     user_weights = personalization.get_user_topic_weights(user_id)
+
     
     swiped_story_ids = set(
         row[0] for row in db.query(Interaction.story_id).filter(

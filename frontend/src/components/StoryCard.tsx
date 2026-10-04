@@ -48,13 +48,16 @@ export const StoryCard: React.FC<StoryCardProps> = ({
   };
 
   const timeAgo = (dateStr: string) => {
-    const diffHours = Math.round((Date.now() - new Date(dateStr).getTime()) / (1000 * 60 * 60));
-    if (diffHours < 1) return 'Just now';
-    if (diffHours === 1) return '1h ago';
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours}h ago`;
     const days = Math.floor(diffHours / 24);
     return `${days}d ago`;
   };
+
 
   return (
     <div

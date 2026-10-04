@@ -7,9 +7,9 @@ from backend.app.services.normalizer import canonicalize_url, normalize_title, g
 
 DEFAULT_SOURCES = [
     {
-        "name": "Anthropic Research & News",
-        "url": "https://www.anthropic.com/news/feed.xml",
-        "feed_type": "rss",
+        "name": "Anthropic News & Research",
+        "url": "https://www.anthropic.com/news",
+        "feed_type": "html",
         "category": "Lab",
         "icon_url": "https://www.anthropic.com/favicon.ico"
     },
@@ -28,25 +28,11 @@ DEFAULT_SOURCES = [
         "icon_url": "https://deepmind.google/favicon.ico"
     },
     {
-        "name": "Meta AI Research",
-        "url": "https://ai.meta.com/blog/rss.xml",
-        "feed_type": "rss",
-        "category": "Lab",
-        "icon_url": "https://ai.meta.com/favicon.ico"
-    },
-    {
         "name": "Hugging Face Blog",
         "url": "https://huggingface.co/blog/feed.xml",
         "feed_type": "rss",
         "category": "Open Source",
         "icon_url": "https://huggingface.co/favicon.ico"
-    },
-    {
-        "name": "Mistral AI News",
-        "url": "https://mistral.ai/news/index.xml",
-        "feed_type": "rss",
-        "category": "Lab",
-        "icon_url": "https://mistral.ai/favicon.ico"
     },
     {
         "name": "Simon Willison AI Weblog",
@@ -63,20 +49,35 @@ DEFAULT_SOURCES = [
         "icon_url": "https://arxiv.org/favicon.ico"
     },
     {
-        "name": "Microsoft Research AI",
-        "url": "https://www.microsoft.com/en-us/research/feed/",
+        "name": "TechCrunch AI",
+        "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
         "feed_type": "rss",
-        "category": "Research",
-        "icon_url": "https://www.microsoft.com/favicon.ico"
+        "category": "Industry",
+        "icon_url": "https://techcrunch.com/favicon.ico"
     },
     {
-        "name": "NVIDIA Technical Blog",
-        "url": "https://developer.nvidia.com/blog/feed",
+        "name": "VentureBeat AI",
+        "url": "https://venturebeat.com/category/ai/feed/",
+        "feed_type": "rss",
+        "category": "Industry",
+        "icon_url": "https://venturebeat.com/favicon.ico"
+    },
+    {
+        "name": "MIT Technology Review AI",
+        "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+        "feed_type": "rss",
+        "category": "Research",
+        "icon_url": "https://www.technologyreview.com/favicon.ico"
+    },
+    {
+        "name": "NVIDIA Blog",
+        "url": "https://blogs.nvidia.com/feed/",
         "feed_type": "rss",
         "category": "Hardware",
-        "icon_url": "https://developer.nvidia.com/favicon.ico"
+        "icon_url": "https://blogs.nvidia.com/favicon.ico"
     }
 ]
+
 
 INITIAL_STORIES = [
     {

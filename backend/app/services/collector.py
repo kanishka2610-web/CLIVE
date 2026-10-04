@@ -171,7 +171,13 @@ class FeedCollectorService:
                 canonical_url = canonicalize_url(item.url)
                 norm_title = normalize_title(item.title)
                 
-                # Check for duplicate
+                # Pre-check canonical URL in database
+                existing_canonical = self.db.query(Story.id).filter(Story.canonical_url == canonical_url).first()
+                if existing_canonical:
+                    results["items_duplicate"] += 1
+                    continue
+
+                # Check for duplicate via deduplicator
                 is_dup, existing_story, reason = self.deduplicator.check_duplicate(
                     raw_url=canonical_url,
                     title=norm_title,
@@ -242,9 +248,14 @@ class FeedCollectorService:
                     status="processed"
                 )
                 
-                self.db.add(story)
-                self.db.commit()
-                results["items_saved"] += 1
+                try:
+                    self.db.add(story)
+                    self.db.commit()
+                    results["items_saved"] += 1
+                except Exception as save_ex:
+                    self.db.rollback()
+                    results["items_duplicate"] += 1
+                    logger.info(f"Skipping duplicate item [{canonical_url}]: {save_ex}")
 
             # Update source health stats
             source.last_scanned_at = datetime.now(timezone.utc)
@@ -254,15 +265,19 @@ class FeedCollectorService:
             self.db.commit()
 
         except Exception as ex:
-            error_msg = f"Failed to scan {source.name}: {str(ex)}"
+            self.db.rollback()
+            error_msg = f"Failed to scan source: {str(ex)}"
             logger.error(error_msg)
             results["status"] = "failed"
             results["errors"].append(error_msg)
-            
-            source.last_scanned_at = datetime.now(timezone.utc)
-            source.failure_count = (source.failure_count or 0) + 1
-            source.last_error = str(ex)[:400]
-            self.db.commit()
+            try:
+                source.last_scanned_at = datetime.now(timezone.utc)
+                source.failure_count = (source.failure_count or 0) + 1
+                source.last_error = str(ex)[:400]
+                self.db.commit()
+            except Exception:
+                self.db.rollback()
+
 
         return results
 

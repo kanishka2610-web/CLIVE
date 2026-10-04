@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, or_
 
@@ -9,8 +9,10 @@ from backend.app.models.interaction import Interaction
 from backend.app.schemas.story import StoryOut, StoryFeedResponse
 from backend.app.services.personalization import PersonalizationService
 from backend.app.services.ranker import calculate_story_rank
+from backend.app.services.scheduler import is_scan_running, run_scheduled_intelligence_scan
 
 router = APIRouter(prefix="/api/feed", tags=["Feed"])
+
 
 def format_ranked_story(story: Story, user_id: str, saved_ids: set, user_weights: dict) -> StoryOut:
     rank_score = calculate_story_rank(
@@ -33,6 +35,7 @@ def format_ranked_story(story: Story, user_id: str, saved_ids: set, user_weights
 
 @router.get("", response_model=StoryFeedResponse)
 def get_personalized_feed(
+    background_tasks: BackgroundTasks,
     category: Optional[str] = Query(None, description="Filter by category"),
     q: Optional[str] = Query(None, description="Search term across title, headline, summary"),
     page: int = Query(1, ge=1),
@@ -43,7 +46,11 @@ def get_personalized_feed(
     """
     GET /api/feed: Personalized ranked feed calculated using:
     40% Importance + 30% Personal Relevance + 20% Recency + 10% Novelty + Breaking Boost.
+    Automatically triggers minute-to-minute live background scanning on reload.
     """
+    if not is_scan_running():
+        background_tasks.add_task(run_scheduled_intelligence_scan)
+
     personalizer = PersonalizationService(db)
     user_weights = personalizer.get_user_topic_weights(user_id)
 

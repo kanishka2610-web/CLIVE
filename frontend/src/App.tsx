@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Header } from './components/Header';
@@ -17,8 +17,8 @@ import type { Story } from './types';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 2,
+      refetchOnWindowFocus: true,
+      staleTime: 1000 * 10,
     },
   },
 });
@@ -34,6 +34,11 @@ const AppContent: React.FC = () => {
   });
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
 
+  // Trigger live feed ingestion scan whenever user opens or reloads page
+  useEffect(() => {
+    api.triggerScan().catch(() => {});
+  }, []);
+
   const handleSplashComplete = useCallback(() => {
     try {
       sessionStorage.setItem('clive_splash_seen', 'true');
@@ -46,8 +51,9 @@ const AppContent: React.FC = () => {
   const { data: stats } = useQuery({
     queryKey: ['radarStats'],
     queryFn: api.getRadarStats,
-    refetchInterval: 20000,
+    refetchInterval: 10000,
   });
+
 
   return (
     <>

@@ -24,9 +24,10 @@ class Settings(BaseSettings):
     MIN_IMPORTANCE_FOR_SUMMARY: float = 6.5
     IMPORTANCE_SUMMARY_THRESHOLD: float = 65.0
     
-    # Feed Ingestion Interval
-    COLLECT_INTERVAL_MINUTES: int = 10
-    SCAN_INTERVAL_MINUTES: int = 10
+    # Feed Ingestion Interval (Minute-to-Minute Real-Time Scanning)
+    COLLECT_INTERVAL_MINUTES: int = 1
+    SCAN_INTERVAL_MINUTES: int = 1
+
     HTTP_TIMEOUT_SECONDS: float = 12.0
     MAX_ITEMS_PER_FEED: int = 25
     USER_AGENT: str = "CLIVE-AI-Intelligence/1.0 (+https://github.com/kanishka2610-web/CLIVE)"
