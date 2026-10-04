@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # Database
-    DATABASE_URL: str = "sqlite:///./ai_radar.db"
+    DATABASE_URL: str = "sqlite:////tmp/ai_radar.db" if os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV") else "sqlite:///./ai_radar.db"
+
     
     # AI - Server-side Gemini configuration
     GEMINI_API_KEY: str = ""
