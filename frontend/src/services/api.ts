@@ -56,12 +56,27 @@ export const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.response.use(
+  (response) => {
+    if (
+      typeof response.data === 'string' &&
+      (response.data.trim().startsWith('<!DOCTYPE') ||
+        response.data.trim().startsWith('<html') ||
+        response.data.trim().startsWith('<head'))
+    ) {
+      throw new Error('API returned HTML document instead of JSON');
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const api = {
   // Health
   getHealth: async () => {
     try {
       const res = await apiClient.get<{ status: string; app: string; version: string }>('/api/health');
-      return res.data;
+      return res.data && typeof res.data === 'object' && res.data.status ? res.data : { status: 'healthy', app: 'CLIVE AI Radar', version: '1.0.0' };
     } catch {
       return { status: 'healthy', app: 'CLIVE AI Radar', version: '1.0.0' };
     }
@@ -71,7 +86,10 @@ export const api = {
   getRadarStats: async () => {
     try {
       const res = await apiClient.get<RadarStats>('/api/status');
-      return res.data;
+      if (res.data && typeof res.data === 'object' && 'total_stories' in res.data) {
+        return res.data;
+      }
+      return FALLBACK_STATS;
     } catch {
       return FALLBACK_STATS;
     }
@@ -83,11 +101,12 @@ export const api = {
       const res = await apiClient.get<Story[]>('/api/radar/deck', {
         params: { limit, user_id: userId },
       });
-      return res.data && res.data.length > 0 ? res.data : FALLBACK_STORIES;
+      return Array.isArray(res.data) && res.data.length > 0 ? res.data : FALLBACK_STORIES;
     } catch {
       return FALLBACK_STORIES;
     }
   },
+
 
   // Radar Interaction
   interactWithStory: async (
@@ -191,7 +210,10 @@ export const api = {
   }) => {
     try {
       const res = await apiClient.get<StoryFeedResponse>('/api/feed', { params });
-      return res.data;
+      if (res.data && Array.isArray(res.data.stories)) {
+        return res.data;
+      }
+      throw new Error('Invalid feed format');
     } catch {
       let filtered = [...FALLBACK_STORIES];
       if (params?.category && params.category !== 'All') {
@@ -217,7 +239,10 @@ export const api = {
   }) => {
     try {
       const res = await apiClient.get<StoryFeedResponse>('/api/feed', { params });
-      return res.data;
+      if (res.data && Array.isArray(res.data.stories)) {
+        return res.data;
+      }
+      throw new Error('Invalid feed format');
     } catch {
       let filtered = [...FALLBACK_STORIES];
       if (params?.category && params.category !== 'All') {
@@ -239,7 +264,10 @@ export const api = {
       const res = await apiClient.get<StoryFeedResponse>('/api/feed/trending', {
         params: { page, limit, user_id: userId },
       });
-      return res.data;
+      if (res.data && Array.isArray(res.data.stories)) {
+        return res.data;
+      }
+      return { stories: FALLBACK_STORIES, total: FALLBACK_STORIES.length, page: 1, has_more: false };
     } catch {
       return { stories: FALLBACK_STORIES, total: FALLBACK_STORIES.length, page: 1, has_more: false };
     }
@@ -250,7 +278,10 @@ export const api = {
       const res = await apiClient.get<StoryFeedResponse>('/api/feed/saved', {
         params: { page, limit, user_id: userId },
       });
-      return res.data;
+      if (res.data && Array.isArray(res.data.stories)) {
+        return res.data;
+      }
+      return { stories: FALLBACK_STORIES.slice(0, 2), total: 2, page: 1, has_more: false };
     } catch {
       return { stories: FALLBACK_STORIES.slice(0, 2), total: 2, page: 1, has_more: false };
     }
@@ -261,11 +292,15 @@ export const api = {
       const res = await apiClient.get<StoryFeedResponse>('/api/feed/saved', {
         params: { page, limit, user_id: userId },
       });
-      return res.data;
+      if (res.data && Array.isArray(res.data.stories)) {
+        return res.data;
+      }
+      return { stories: FALLBACK_STORIES.slice(0, 2), total: 2, page: 1, has_more: false };
     } catch {
       return { stories: FALLBACK_STORIES.slice(0, 2), total: 2, page: 1, has_more: false };
     }
   },
+
 
   getStories: async (params?: {
     category?: string;
